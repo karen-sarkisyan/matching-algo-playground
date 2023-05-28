@@ -1,38 +1,81 @@
-.App {
+.content {
+  display: flex;
+  flex-direction: row;
+}
+
+.book {
+  border: 1px solid #ddd;
+  width: 50%;
   text-align: center;
 }
 
-.App-logo {
-  height: 40vmin;
-  pointer-events: none;
+.book__content {
+  width: 100%;
+  display: flex;
+  flex-direction: row;
+  justify-content: space-around;
 }
 
-@media (prefers-reduced-motion: no-preference) {
-  .App-logo {
-    animation: App-logo-spin infinite 20s linear;
-  }
-}
-
-.App-header {
-  background-color: #282c34;
-  min-height: 100vh;
+.book__column {
+  width: 30%;
   display: flex;
   flex-direction: column;
   align-items: center;
+}
+
+.book__total {
+  text-align: center;
+  font-size: 16px;
+  font-weight: bold;
+  margin: 10px 0;
+}
+
+.offer {
+  background-color: grey;
+  text-align: center;
+  width: 70%;
+  padding: 5px;
+  margin: 5px;
+  border-radius: 3px;
+  box-shadow: 0 0 3px darkgray;
+  text-align: center;
+  position: relative;
+  overflow: hidden;
+  display: flex;
+  flex-direction: column;
   justify-content: center;
-  font-size: calc(10px + 2vmin);
-  color: white;
 }
 
-.App-link {
-  color: #61dafb;
+/* diagonal stripes background with transparency between */
+.offer__matched {
+  background-image: repeating-linear-gradient(
+    135deg,
+    rgba(255, 255, 255, 0.5),
+    rgba(255, 255, 255, 0.5) 10px,
+    transparent 10px,
+    transparent 20px
+  );
+  position: absolute;
+  width: 100%;
+  bottom: 0;
+  left: 0;
 }
 
-@keyframes App-logo-spin {
-  from {
-    transform: rotate(0deg);
-  }
-  to {
-    transform: rotate(360deg);
-  }
+.offer__text {
+  z-index: 1;
+  font-size: 14px;
+  font-weight: bold;
+  color: #333;
+}
+
+.offer__text--small {
+  font-size: 8px;
+}
+
+.offer--ask {
+  background-color: coral;
+}
+
+.offer--bid {
+  background-color: darkseagreen;
 }
