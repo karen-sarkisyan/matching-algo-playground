@@ -68,6 +68,7 @@ function App() {
       <div className="controls">
         <button onClick={fillOffers}>Fill Offers</button>
         <button onClick={matchOffers}>Match Offers</button>
+        <button onClick={demoResolve}>Demo resolve</button>
       </div>
       <div className="content">
         <div className="book">
@@ -168,3 +169,94 @@ function App() {
 }
 
 export default App;
+
+interface Offer {
+  id: string;
+  amount: number;
+  price: number;
+}
+
+interface ExecutionBook {
+  [id: string]: Offer[];
+}
+
+function resolveOrderBook(
+  bids: Offer[],
+  asks: Offer[]
+): [ExecutionBook, ExecutionBook] {
+  const executionBids: ExecutionBook = {};
+  const executionAsks: ExecutionBook = {};
+
+  // Sort bids and asks in descending order of price
+  bids.sort((a, b) => b.price - a.price);
+  asks.sort((a, b) => b.price - a.price);
+
+  let bidIndex = 0;
+  let askIndex = 0;
+
+  while (bidIndex < bids.length && askIndex < asks.length) {
+    const bid = bids[bidIndex];
+    const ask = asks[askIndex];
+
+    // Check if bid price is equal to or higher than ask price
+    if (bid.price >= ask.price) {
+      const matchedAmount = Math.min(bid.amount, ask.amount);
+
+      // Update bid offer
+      bid.amount -= matchedAmount;
+
+      // Update ask offer
+      ask.amount -= matchedAmount;
+
+      // Add matched offers to execution books
+      if (!executionBids[bid.id]) {
+        executionBids[bid.id] = [];
+      }
+      executionBids[bid.id].push({
+        id: ask.id,
+        amount: matchedAmount,
+        price: ask.price,
+      });
+
+      if (!executionAsks[ask.id]) {
+        executionAsks[ask.id] = [];
+      }
+      executionAsks[ask.id].push({
+        id: bid.id,
+        amount: matchedAmount,
+        price: ask.price,
+      });
+
+      // Remove fully matched offers
+      if (bid.amount === 0) {
+        bidIndex++;
+      }
+      if (ask.amount === 0) {
+        askIndex++;
+      }
+    } else {
+      askIndex++;
+    }
+  }
+
+  return [executionBids, executionAsks];
+}
+
+// Example usage
+const bids: Offer[] = [
+  { id: "bid1", amount: 100, price: 150 },
+  { id: "bid2", amount: 5, price: 45 },
+  { id: "bid3", amount: 8, price: 55 },
+];
+
+const asks: Offer[] = [
+  { id: "ask1", amount: 7, price: 50 },
+  { id: "ask2", amount: 4, price: 55 },
+  { id: "ask3", amount: 6, price: 40 },
+];
+
+function demoResolve() {
+  const [executionBids, executionAsks] = resolveOrderBook(bids, asks);
+  console.log("Execution Bids:", executionBids);
+  console.log("Execution Asks:", executionAsks);
+}

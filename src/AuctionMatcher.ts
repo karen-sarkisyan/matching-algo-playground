@@ -127,16 +127,14 @@ export class Matcher {
     const bidExecutionBook: BidExecutionBook = {};
     const askExecutionBook: AskExecutionBook = {};
 
-    console.log(this.bids, this.asks);
-
     // split each offer into chunks of 5, and sort them by price in ascending order
     this.bids = this._splitAndSort(this.bids);
     this.asks = this._splitAndSort(this.asks);
 
-    // console.log(this.bids, this.asks);
+    console.log(this.bids, this.asks);
 
     const qmv = this._getQ(this.bids, this.asks);
-    console.log(qmv * this.UNIT_OF_AMOUNT);
+    console.log(qmv);
 
     let i = 0;
 
@@ -160,8 +158,6 @@ export class Matcher {
           amount: ask.amount,
           offerId: ask.id,
         });
-
-        console.log("matched", bid, ask);
       }
 
       i++;
@@ -281,8 +277,9 @@ export class Matcher {
           qd = qd + b.amount / this.UNIT_OF_AMOUNT;
           b = getBid();
         }
+
+        qmin = qmin + qd;
       }
-      qmin = qmin + qd;
     }
     return qmin;
   }
